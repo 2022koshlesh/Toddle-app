@@ -1,11 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { isValidModuleName } from '../../utils/validations';
 
 const ModuleModal = ({ isOpen, onClose, onSave, module = null }) => {
-  const [moduleName, setModuleName] = useState(module ? module.name : '');
+  const [moduleName, setModuleName] = useState('');
+
+  useEffect(() => {
+    setModuleName(module ? module.name : '');
+  }, [module]);
 
   const handleSubmit = e => {
     e.preventDefault();
-
+    if (!isValidModuleName(moduleName)) {
+      alert('Module name cannot be empty.');
+      return;
+    }
     onSave({
       id: module ? module.id : Date.now().toString(),
       name: moduleName.trim(),
@@ -16,11 +24,11 @@ const ModuleModal = ({ isOpen, onClose, onSave, module = null }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay" role="dialog" aria-modal="true">
       <div className="modal-content">
         <div className="modal-header">
           <h2>{module ? 'Edit module' : 'Create new module'}</h2>
-          <button className="modal-close" onClick={onClose}>
+          <button className="modal-close" onClick={onClose} aria-label="close">
             ×
           </button>
         </div>

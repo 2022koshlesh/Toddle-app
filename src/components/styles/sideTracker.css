@@ -1,0 +1,30 @@
+.main {
+  display: flex;
+  align-items: flex-start;
+}
+
+.content {
+  flex: 1;
+}
+
+.tracker {
+  position: sticky;
+  top: 20px;
+  margin-left: 24px;
+  min-width: 180px;
+}
+
+.tracker-item {
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  color: #393737;
+  border-left: 3px solid transparent;
+  transition: all 1s ease;
+}
+
+.tracker-item.active {
+  font-weight: 600;
+  color: #1a0e0e;
+  border-left: 3px solid #100a0a;
+}
