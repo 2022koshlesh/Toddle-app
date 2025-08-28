@@ -38,6 +38,15 @@ const CourseBuilder = () => {
 
   /** MODULE CRUD */
   const handleSaveModule = module => {
+    const isDuplicate = modules.some(
+      m =>
+        m.name.toLowerCase() === module.name.toLowerCase() && m.id !== module.id
+    );
+    if (isDuplicate) {
+      alert('Module with this name already exists!');
+      return;
+    }
+
     if (currentModule) {
       setModules(prev => prev.map(m => (m.id === module.id ? module : m)));
     } else {
@@ -64,6 +73,18 @@ const CourseBuilder = () => {
 
   /** ITEM CRUD */
   const handleSaveLink = linkItem => {
+    const isDuplicate = items.some(
+      i =>
+        i.type === 'link' &&
+        i.moduleId === (currentModuleId ?? null) &&
+        i.url === linkItem.url &&
+        i.id !== linkItem.id
+    );
+    if (isDuplicate) {
+      alert('This link already exists in the module!');
+      return;
+    }
+
     if (currentItem) {
       setItems(prev =>
         prev.map(i => (i.id === linkItem.id ? { ...i, ...linkItem } : i))
@@ -76,6 +97,18 @@ const CourseBuilder = () => {
   };
 
   const handleSaveUpload = fileItem => {
+    const isDuplicate = items.some(
+      i =>
+        i.type === 'file' &&
+        i.moduleId === (currentModuleId ?? null) &&
+        i.fileName === fileItem.fileName &&
+        i.id !== fileItem.id
+    );
+    if (isDuplicate) {
+      alert('This file already exists in the module!');
+      return;
+    }
+
     if (currentItem) {
       setItems(prev =>
         prev.map(i => (i.id === fileItem.id ? { ...i, ...fileItem } : i))
@@ -160,15 +193,12 @@ const CourseBuilder = () => {
     [items]
   );
 
-  /** Search filter (removed validation, now plain lowercase match) */
+  /** Search filter */
   const filteredModules = useMemo(() => {
     const q = query.toLowerCase().trim();
     if (!q) return modules;
     return modules.filter(m => {
-      // match module name from start
       if (m.name.toLowerCase().startsWith(q)) return true;
-
-      // match items inside module from start
       return items.some(
         i =>
           i.moduleId === m.id &&
@@ -216,7 +246,6 @@ const CourseBuilder = () => {
               <EmptyState />
             ) : (
               <>
-                {/* Render standalone items */}
                 {standaloneItems.length > 0 && (
                   <div className="standalone-items">
                     {standaloneItems.map(item => (
@@ -231,7 +260,6 @@ const CourseBuilder = () => {
                   </div>
                 )}
 
-                {/* Render modules */}
                 <div className="module-list">
                   {filteredModules.map(module => (
                     <ModuleCard
@@ -254,14 +282,12 @@ const CourseBuilder = () => {
           </div>
         </section>
 
-        {/* Right tracker */}
         <aside className="tracker">
           {modules.map(m => (
             <div
               key={m.id}
               className={`tracker-item ${activeModuleId === m.id ? 'active' : ''}`}
               onClick={() => {
-                // scroll smoothly to the module
                 const el = document.getElementById(`module-${m.id}`);
                 el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }}
@@ -272,7 +298,6 @@ const CourseBuilder = () => {
         </aside>
       </div>
 
-      {/* Modals */}
       <ModuleModal
         isOpen={isModuleModalOpen}
         onClose={() => setIsModuleModalOpen(false)}
