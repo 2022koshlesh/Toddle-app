@@ -4,6 +4,7 @@ import CloseOutlined from '../../assets/CloseOutlined.svg';
 const LinkModal = ({ isOpen, onClose, onSave, moduleId, item = null }) => {
   const [linkTitle, setLinkTitle] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (item) {
@@ -13,10 +14,16 @@ const LinkModal = ({ isOpen, onClose, onSave, moduleId, item = null }) => {
       setLinkTitle('');
       setLinkUrl('');
     }
+    setError('');
   }, [item]);
 
   const handleSubmit = e => {
     e.preventDefault();
+
+    if (!linkUrl.trim()) {
+      setError('URL cannot be empty');
+      return;
+    }
 
     onSave({
       id: item ? item.id : Date.now().toString(),
@@ -25,6 +32,8 @@ const LinkModal = ({ isOpen, onClose, onSave, moduleId, item = null }) => {
       title: linkTitle,
       url: linkUrl,
     });
+
+    onClose(); // close modal after saving
   };
 
   if (!isOpen) return null;
@@ -50,6 +59,7 @@ const LinkModal = ({ isOpen, onClose, onSave, moduleId, item = null }) => {
                 placeholder="https://example.com"
                 className="form-input"
               />
+              {error && <p className="error-text">{error}</p>}
             </div>
 
             <div className="form-group">

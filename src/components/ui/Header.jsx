@@ -4,7 +4,6 @@ import SinglePointRubricsIcon from '../../assets/SinglePointRubric.svg';
 import LinkOutlined from '../../assets/LinkOutlined.svg';
 import UploadOutlined from '../../assets/UploadOutlined.svg';
 import AddOutlined from '../../assets/AddOutlined.svg';
-import CaretDownFilled from '../../assets/CaretDownFilled.svg';
 import CaretUpFilled from '../../assets/CaretUpFilled.svg';
 
 const Header = ({ onAddClick, query, setQuery }) => {
